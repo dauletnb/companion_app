@@ -74,8 +74,12 @@ WSGI_APPLICATION = 'companion_app.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'companion_db',
+        'USER': 'postgres',
+        'PASSWORD': '1',  # Замени на свой пароль
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
