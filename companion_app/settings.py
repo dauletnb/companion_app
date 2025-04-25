@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core',  # Добавь эту строку
+    'core',
+    'rest_framework',  # Django REST framework
 ]
 
 MIDDLEWARE = [
