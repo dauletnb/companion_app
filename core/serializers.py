@@ -1,11 +1,6 @@
 from rest_framework import serializers
 from .models import LearningPath, MicroLesson, UserProgress
 
-class LearningPathSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = LearningPath
-        fields = ['id', 'title', 'description', 'created_at']
-
 class MicroLessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = MicroLesson
@@ -15,3 +10,24 @@ class UserProgressSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProgress
         fields = ['id', 'user', 'lesson', 'completed', 'points', 'completed_at']
+
+class LearningPathSerializer(serializers.ModelSerializer):
+    lessons = MicroLessonSerializer(many=True, read_only=True)
+    completion_percentage = serializers.SerializerMethodField()
+
+    class Meta:
+        model = LearningPath
+        fields = ['id', 'title', 'description', 'created_at', 'lessons', 'completion_percentage']
+
+    def get_completion_percentage(self, obj):
+        user = self.context['request'].user
+        if not user.is_authenticated:
+            return 0
+        lessons = obj.lessons.all()
+        if not lessons:
+            return 0
+        completed_lessons = UserProgress.objects.filter(
+            user=user, lesson__path=obj, completed=True
+        ).count()
+        total_lessons = lessons.count()
+        return (completed_lessons / total_lessons) * 100 if total_lessons > 0 else 0
