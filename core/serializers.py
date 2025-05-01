@@ -24,10 +24,11 @@ class LearningPathSerializer(serializers.ModelSerializer):
         if not user.is_authenticated:
             return 0
         lessons = obj.lessons.all()
-        if not lessons:
+        total_lessons = lessons.count()
+        if total_lessons == 0:
             return 0
         completed_lessons = UserProgress.objects.filter(
             user=user, lesson__path=obj, completed=True
         ).count()
-        total_lessons = lessons.count()
-        return (completed_lessons / total_lessons) * 100 if total_lessons > 0 else 0
+        percentage = (completed_lessons / total_lessons) * 100
+        return round(percentage, 2)  # Округляем до 2 знаков после запятой

@@ -34,6 +34,7 @@ class UserProgress(models.Model):
         """Метод для завершения урока и начисления баллов."""
         if not self.completed:
             self.completed = True
-            self.points = 10  # Начисляем 10 баллов за урок
+            # Начисляем баллы: 1 балл за каждую минуту урока, минимум 5 баллов
+            self.points = max(self.lesson.duration, 5)
             self.completed_at = timezone.now()
             self.save()
