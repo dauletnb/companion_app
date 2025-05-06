@@ -28,7 +28,7 @@ class LearningPathSerializer(serializers.ModelSerializer):
         if total_lessons == 0:
             return 0
         completed_lessons = UserProgress.objects.filter(
-            user=user, lesson__path=obj, completed=True
+            user=user, lesson__path_id=obj.id, completed=True
         ).count()
         percentage = (completed_lessons / total_lessons) * 100
-        return round(percentage, 2)  # Округляем до 2 знаков после запятой
+        return round(percentage, 2)

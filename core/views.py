@@ -23,8 +23,8 @@ class UserProgressViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         instance = serializer.save()
-        if instance.completed and instance.points == 0:
-            instance.complete()
+        if instance.completed:  # Проверяем только completed, убираем условие про points
+            instance.complete()  # Вызываем метод для начисления баллов
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
